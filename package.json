@@ -1,0 +1,23 @@
+{
+  "name" : "ip-cam-control",
+  "version" : "0.0.1",
+  "description" : "Minimal remote adminstration of supported IP cameras",
+  "main" : "index.js",
+  "devDependencies" : {
+  },
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/wtjones/ip-cam-control"
+  },
+  "keywords" : [
+    "camera",
+    "ip camera",
+    "linksys"
+  ],
+  "author" : {
+    "name" : "William T Jones",
+    "email" : "wtravisjones@gmail.com",
+    "url" : "http://www.8charmax.com"
+  },
+  "license" : "MIT"
+}
