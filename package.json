@@ -16,7 +16,8 @@
   "author" : {
     "name" : "William T Jones",
     "email" : "wtravisjones@gmail.com",
-    "url" : "http://www.8charmax.com",
+    "url" : "http://www.8charmax.com"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/wtjones/ip-cam-control/issues"

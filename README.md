@@ -21,6 +21,11 @@ camControl.editCamSettings('192.168.0.99', '80', 'admin', 'mypassword', camSetti
 ```
 
 
+# installation
+
+`npm install ip-cam-control`
+
+
 # settings
 
 ## led (boolean)
