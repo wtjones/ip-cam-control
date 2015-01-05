@@ -2,7 +2,10 @@
 
 var http = require('http');
 var querystring = require('querystring');
-  
+var jsdom = require('jsdom');
+var request = require('request');
+var fs = require("fs");
+
 /**
  * Applies settings to an ip camera. Only given settings are modified.
  * Example settings:
@@ -53,4 +56,25 @@ exports.editCamSettings = function(hostname, port, user, pass, settings, cb) {
 
   request.write(data);
   request.end();
+}
+
+exports.getCamSettings = function(hostname, port, user, pass, cb) {
+  var jquery = fs.readFileSync("node_modules/jquery/dist/jquery.js", "utf-8");
+  var uri = 'http://' +  user + ':' + pass + '@' + hostname + ":" + port 
+            + "/adm/file.cgi?next_file=event.htm";
+  jsdom.env({
+    url: uri,
+    src: [jquery],
+    done: function(err, window){
+      if (err) throw err;
+      var $ = window.$;
+      var motionCheck = $('input[name=h_en_trig]').val();
+      console.log(motionCheck);
+      var result = {
+        motionDetection: motionCheck === '1' ? true : false
+      }
+      cb(err, result);
+    }
+  });
+
 }

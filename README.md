@@ -47,6 +47,18 @@ Option 'Enable Mobile Streaming' on the Options admin page.
 
 First param of the callback will either contain an error or null.
 
+* getCamSettings(hostname, port, user, pass, callback)
+
+## callback 
+
+`function (err, result)`
+
+```
+result = {
+	motionDetection: boolean
+}
+```
+
 
 # license
 

@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "Minimal remote adminstration of supported IP cameras.",
   "main": "index.js",
+   "dependencies": {
+    "jsdom": "*",
+    "request": "*"
+  },
   "devDependencies": {},
   "repository": {
     "type": "git",
