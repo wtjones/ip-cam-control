@@ -1,6 +1,6 @@
 {
   "name": "ip-cam-control",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Minimal remote adminstration of supported IP cameras.",
   "main": "index.js",
    "dependencies": {
