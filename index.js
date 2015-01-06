@@ -1,10 +1,10 @@
-"user strict";
+"use strict";
 
 var http = require('http');
 var querystring = require('querystring');
 var jsdom = require('jsdom');
-var request = require('request');
-var fs = require("fs");
+var fs = require('fs');
+var async = require('async');
 
 /**
  * Applies settings to an ip camera. Only given settings are modified.
@@ -58,23 +58,84 @@ exports.editCamSettings = function(hostname, port, user, pass, settings, cb) {
   request.end();
 }
 
+/**
+ * Reads settings from ip cam's web server.
+ * @returns {
+ *   led: boolean
+ *   motionDetection: bool
+ *   allowMobileStreaming: bool
+ */
 exports.getCamSettings = function(hostname, port, user, pass, cb) {
+  var urlPrefix = 'http://' +  user + ':' + pass + '@' + hostname + ":" + port ;
+
+  // Some settings are on different pages. Run each request in parallel
+  // and combine results.
+  async.parallel([
+    function(callback) {
+      var url = urlPrefix + '/adm/file.cgi?next_file=event.htm';
+      getDomValues(url, ['input[name=h_en_trig]'], function(err, result) {
+        callback(err, result);
+      });
+    },
+    function(callback) {
+      var url = urlPrefix + '/adm/file.cgi?next_file=basic.htm';
+      getDomValues(url, ['input[name=h_LEDs]'], function(err, result) {
+        callback(err, result);
+      });
+    },
+    function(callback) {
+      var url = urlPrefix + '/adm/file.cgi?next_file=image.htm';
+      getDomValues(url, ['input[name=h_en_mb]'], function(err, result) {
+        callback(err, result);
+      });
+    }
+  ],
+  function(err, results) {
+    var temp = mergeObjects(results[0], results[1]);
+    results = mergeObjects(results[2], temp);
+    var result = {
+      led:                  results['input[name=h_LEDs]'] === '1' ? true : false,
+      motionDetection:      results['input[name=h_en_trig]'] === '1' ? true : false,
+      allowMobileStreaming: results['input[name=h_en_mb]'] === '1' ? true : false
+    };
+    cb(err, result);
+  });
+}
+
+/**
+ * Overwrites obj1's values with obj2's and adds obj2's if non existent in obj1
+ * @param obj1
+ * @param obj2
+ * @returns obj3 a new object based on obj1 and obj2
+ */
+function mergeObjects(obj1, obj2){
+    var obj3 = {};
+    for (var attrname in obj1) { obj3[attrname] = obj1[attrname]; }
+    for (var attrname in obj2) { obj3[attrname] = obj2[attrname]; }
+    return obj3;
+}
+
+/**
+ * Scrapes a list of dom selection queries from given url.
+ * @param  url of site
+ * @param  array of jquery dom selector queries
+ * @param  Function(err, {'dom selector query': jQuery .val()})
+ * @return {[type]}
+ */
+function getDomValues(url, domQueries, cb) {
   var jquery = fs.readFileSync("node_modules/jquery/dist/jquery.js", "utf-8");
-  var uri = 'http://' +  user + ':' + pass + '@' + hostname + ":" + port 
-            + "/adm/file.cgi?next_file=event.htm";
   jsdom.env({
-    url: uri,
+    url: url,
     src: [jquery],
     done: function(err, window){
-      if (err) throw err;
+      if (err) cb(err, null)
       var $ = window.$;
-      var motionCheck = $('input[name=h_en_trig]').val();
-      console.log(motionCheck);
-      var result = {
-        motionDetection: motionCheck === '1' ? true : false
+      var result = {};
+      
+      for (var i = 0; i < domQueries.length; i++) {
+        result[domQueries[i]] = $(domQueries[i]).val();
       }
       cb(err, result);
     }
   });
-
 }

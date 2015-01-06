@@ -3,9 +3,9 @@
   "version": "0.0.2",
   "description": "Minimal remote adminstration of supported IP cameras.",
   "main": "index.js",
-   "dependencies": {
+  "dependencies": {
     "jsdom": "*",
-    "request": "*"
+    "async": "*"
   },
   "devDependencies": {},
   "repository": {
@@ -17,10 +17,10 @@
     "ip camera",
     "linksys"
   ],
-  "author" : {
-    "name" : "William T Jones",
-    "email" : "wtravisjones@gmail.com",
-    "url" : "http://www.8charmax.com"
+  "author": {
+    "name": "William T Jones",
+    "email": "wtravisjones@gmail.com",
+    "url": "http://www.8charmax.com"
   },
   "license": "MIT",
   "bugs": {

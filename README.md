@@ -43,19 +43,21 @@ Option 'Enable Mobile Streaming' on the Options admin page.
 
 # methods
 
-* editCamSettings(hostname, port, user, pass, settings, callback)
+### editCamSettings(hostname, port, user, pass, settings, callback)
 
 First param of the callback will either contain an error or null.
 
-* getCamSettings(hostname, port, user, pass, callback)
+### getCamSettings(hostname, port, user, pass, callback)
 
-## callback 
+#### callback 
 
 `function (err, result)`
 
 ```
 result = {
-	motionDetection: boolean
+	led: boolean
+ 	motionDetection: bool
+ 	allowMobileStreaming: bool
 }
 ```
 
