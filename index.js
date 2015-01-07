@@ -5,6 +5,7 @@ var querystring = require('querystring');
 var jsdom = require('jsdom');
 var fs = require('fs');
 var async = require('async');
+var path = require('path');
 
 /**
  * Applies settings to an ip camera. Only given settings are modified.
@@ -123,7 +124,7 @@ function mergeObjects(obj1, obj2){
  * @return {[type]}
  */
 function getDomValues(url, domQueries, cb) {
-  var jquery = fs.readFileSync("node_modules/jquery/dist/jquery.js", "utf-8");
+  var jquery = fs.readFileSync(path.resolve(__dirname, "node_modules/jquery/dist/jquery.js"), "utf-8");
   jsdom.env({
     url: url,
     src: [jquery],
